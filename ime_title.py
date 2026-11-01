@@ -6,6 +6,7 @@
 import asyncio
 import ctypes
 import ctypes.util
+import os
 import time
 
 import iterm2
@@ -21,6 +22,7 @@ TAP_HOLD_SECONDS = 0.5
 TITLE_FUNCTION_ID = "com.huro3h.ime-title"
 # タイトルの文字には色を付けられないので、入力モードごとに色付きの絵文字を前に置く
 IME_MARKS = {"あ": "⚪", "ア": "⚪", "A": "🔵"}
+HOME = os.path.expanduser("~")
 
 carbon = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/Carbon.framework/Carbon")
 cf = ctypes.cdll.LoadLibrary(ctypes.util.find_library("CoreFoundation"))
@@ -56,11 +58,12 @@ def label_for(source_id):
 @iterm2.TitleProviderRPC
 async def ime_title(
     ime=iterm2.Reference("user.ime?"),
-    name=iterm2.Reference("autoName?"),
-    job=iterm2.Reference("jobName?"),
+    path=iterm2.Reference("path?"),
 ):
-    # 既定の「セッション名 (ジョブ名)」の形を保ったまま、先頭に入力モードを付ける
-    title = f"{name} ({job})" if job else (name or "")
+    # 入力モードのあとに現在のディレクトリを出す。ホーム以下は ~ に縮める
+    title = path or ""
+    if title == HOME or title.startswith(HOME + "/"):
+        title = "~" + title[len(HOME):]
     return f"{IME_MARKS.get(ime, '')}{ime} {title}" if ime else title
 
 

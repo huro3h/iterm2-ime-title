@@ -18,7 +18,8 @@ AutoLaunch はコピーではなくリンクにしている。`git pull` だけ�
 ## 仕組み
 
 1. **タイトルプロバイダ** `ime_title`(`@iterm2.TitleProviderRPC`)を識別子 `com.huro3h.ime-title` で登録する。
-   引数に `user.ime?` `autoName?` `jobName?` の変数を参照させているので、どれかが変わると iTerm2 が呼び直す。
+   引数に `user.ime?` `path?` の変数を参照させているので、どちらかが変わると iTerm2 が呼び直す。
+   `path` はシェル統合が cd のたびに送るディレクトリ。ホーム以下は `~` に縮めて出す。
 2. 各セッションのユーザー変数 `user.ime` に `A` / `あ` / `ア` を書く。タイトルの組み立ては iTerm2 側に任せる。
 3. 入力ソースは Carbon の `TISCopyCurrentKeyboardInputSource` を ctypes で呼んで 30ms ごとに読む。
 4. ⌘の単押しを `KeystrokeMonitor(advanced=True)` の flags-changed で検出し、先回りして表示を変える。
