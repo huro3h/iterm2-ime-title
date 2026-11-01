@@ -21,7 +21,7 @@ COMMAND_TAP_SECONDS = 1.0  # Karabiner の to_if_alone の既定のタイムア�
 TAP_HOLD_SECONDS = 0.5
 TITLE_FUNCTION_ID = "com.huro3h.ime-title"
 # タイトルの文字には色を付けられないので、入力モードごとに色付きの絵文字を前に置く
-IME_MARKS = {"あ": "⚪", "ア": "⚪", "A": "🔵"}
+IME_MARKS = {"あ": "⚪", "ア": "🟢", "A": "🔵"}
 HOME = os.path.expanduser("~")
 
 carbon = ctypes.cdll.LoadLibrary("/System/Library/Frameworks/Carbon.framework/Carbon")
@@ -64,7 +64,7 @@ async def ime_title(
     title = path or ""
     if title == HOME or title.startswith(HOME + "/"):
         title = "~" + title[len(HOME):]
-    return f"{IME_MARKS.get(ime, '')}{ime} {title}" if ime else title
+    return f"[{IME_MARKS.get(ime, '')} {ime}] {title}" if ime else title
 
 
 async def set_label(session, label):
